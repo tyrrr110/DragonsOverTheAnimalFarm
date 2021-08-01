@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: cb70b349ff5111740bcab6b92618cb9b
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 200
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - Rocky Monkey
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: e5951088e9b76f04abe915c7fb0928ac, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
