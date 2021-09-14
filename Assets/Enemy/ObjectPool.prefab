@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7008419447519612137}
   - component: {fileID: 7008419447519612136}
+  - component: {fileID: 487149014}
   m_Layer: 0
   m_Name: ObjectPool
   m_TagString: Untagged
@@ -49,3 +50,17 @@ MonoBehaviour:
   - {fileID: 8268300374094013934, guid: bf378d13311550448ab9e5343e207f25, type: 3}
   - {fileID: 8268300374094013934, guid: 4554be0a75c397f4292df0b552f691a6, type: 3}
   spawnTimer: 10
+--- !u!114 &487149014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7008419447519612138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b44b0881be0ea5542b44e3ec71be7d8c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  startCoordinates: {x: 4, y: 3}
+  destinationCoordinates: {x: 11, y: 10}

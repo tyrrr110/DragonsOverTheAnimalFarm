@@ -13,13 +13,19 @@ public class AnimalChoicePanel : MonoBehaviour
     [SerializeField] Animal chicken;
     [SerializeField] Animal cat;
     [SerializeField] Animal dog;
+    [SerializeField] List<Tile> placedPoints;
+    [SerializeField] ParticleSystem buildAnimVFX;
+    [SerializeField] float buildAnimWait = 2f;
+    [SerializeField] float SpawnOffset_Y = 1f;
+
     Bank bank;
-    [SerializeField] List<Waypoint> placedPoints;
+    PathFinder pathFinder;
     
     void Start() 
     {
         bank = FindObjectOfType<Bank>();
-        placedPoints = new List<Waypoint>();
+        placedPoints = new List<Tile>();
+        pathFinder = FindObjectOfType<PathFinder>();
 
         // // obj attached should follow singleton pattern
         // int numAnimChoicePanel = FindObjectsOfType<AnimalChoicePanel>().Length;
@@ -34,44 +40,66 @@ public class AnimalChoicePanel : MonoBehaviour
         // }
     }
 
-    public bool PlaceAnimal(Waypoint waypoint)
+/*
+ * Returns a bool array whose index
+ * - [0]: true if an animal is placed
+ * - [1]: true if a dog is placed
+ */
+    public bool[] PlaceAnimal(Tile tile)
     {
-        if (bank == null) return false;
+        Vector3 spawnPosition = tile.transform.position + new Vector3(0f, SpawnOffset_Y, 0f);
 
-        if (isChicken && bank.CurrentBalance >= costChicken)
+        if (bank == null) return new bool[2]{false, false};
+
+        if (isChicken && bank.CurrentBalance >= costChicken && !pathFinder.WillBlockPath(tile.Coordinates))
         {
-            Instantiate(chicken, waypoint.transform.position, Quaternion.identity);
+            StartCoroutine(BuildAnimalEffect(spawnPosition));
+            Instantiate(chicken, spawnPosition, Quaternion.identity);
             bank.Withdraw(costChicken);
-            placedPoints.Add(waypoint);
-            return true;
+            placedPoints.Add(tile);
+            return new bool[2]{true, false};
         }
-        else if (isCat && bank.CurrentBalance >= costCat)
+        else if (isCat && bank.CurrentBalance >= costCat && !pathFinder.WillBlockPath(tile.Coordinates))
         {
-            Instantiate(cat, waypoint.transform.position, Quaternion.identity);
+            StartCoroutine(BuildAnimalEffect(spawnPosition));
+            Instantiate(cat, spawnPosition, Quaternion.identity);
             bank.Withdraw(costCat);
-            placedPoints.Add(waypoint);
-            return true;
+            placedPoints.Add(tile);
+            return new bool[2]{true, false};
         }
         else if (isDog && bank.CurrentBalance >= costDog)
         {
-            Instantiate(dog, waypoint.transform.position, Quaternion.identity);
+            StartCoroutine(BuildAnimalEffect(spawnPosition));
+            Instantiate(dog, spawnPosition, Quaternion.identity);
             bank.Withdraw(costDog);
-            placedPoints.Add(waypoint);
-            return true;
+            placedPoints.Add(tile);
+            return new bool[2]{true, true};
         }
-        else return false;
+        else return new bool[2]{false, false};
     }
 
-    public Waypoint GetPlacedPoint(Vector3 targetPosition)
+    public Tile GetPlacedPoint(Vector3 targetPosition)
     {
-        foreach(Waypoint waypoint in placedPoints)
+        foreach(Tile tile in placedPoints)
         {
-            if (waypoint.transform.position == targetPosition)
+            if (tile.transform.position == targetPosition)
             {
-                placedPoints.Remove(waypoint);
-                return waypoint;
+                placedPoints.Remove(tile);
+                return tile;
             }
         }
         return null;
+    }
+
+    IEnumerator BuildAnimalEffect(Vector3 spawnPosition)
+    {
+        ParticleSystem builtVFX;
+        do 
+        {
+            builtVFX = Instantiate(buildAnimVFX, spawnPosition, Quaternion.identity);
+            yield return new WaitForSeconds(buildAnimWait);
+        } while (false);
+        
+        Destroy(builtVFX.gameObject);
     }
 }

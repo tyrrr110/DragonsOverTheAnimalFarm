@@ -6,7 +6,7 @@ using UnityEngine;
 public class EnemyHealth : MonoBehaviour
 {
     [SerializeField] int maxHitPoints = 1500;
-    int currentHitPoints = 0;
+    [SerializeField] int currentHitPoints = 0;
     [Tooltip("Adds amount to max hit points when the enemy dies")]
     [SerializeField] int difficultyRamp = 500;
     [SerializeField] int damagePerHitByChicken;
@@ -78,9 +78,9 @@ public class EnemyHealth : MonoBehaviour
         if (toRemove != null)
         {
             Destroy(toRemove.gameObject);
-            // resets isPlaceable
-            Waypoint waypoint = panel.GetPlacedPoint(toRemove.position);
-            waypoint.ResetPlaceable();
+            // unblock node
+            Tile tile = panel.GetPlacedPoint(toRemove.position);
+            tile.UnblockTile();
         }
         Debug.Log("Returning from WaitAndRemove");
     }

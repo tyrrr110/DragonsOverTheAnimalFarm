@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 198044318287895918}
   - component: {fileID: 199498425177184442}
   m_Layer: 0
-  m_Name: CloudShield
+  m_Name: PlaceAnimalVFX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -248,7 +248,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 55
+      scalar: 200
       minScalar: 1
       maxCurve:
         serializedVersion: 2

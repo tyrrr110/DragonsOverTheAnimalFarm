@@ -5,11 +5,13 @@ using UnityEngine;
 [RequireComponent(typeof(Enemy), typeof(EnemyHealth))]
 public class EnemyMover : MonoBehaviour
 {
-    [SerializeField] List<Waypoint> path = new List<Waypoint>();
     [SerializeField] [Range(0f, 5f)] float speed = 1f;
     [SerializeField] Animator dragon;
     int dragon_fly_id;
+    List<Node> path = new List<Node>();
     Enemy enemy;
+    GridManager gridManager;
+    PathFinder pathFinder;
     EnemyHealth health;
     bool isPauseByDog = false;
 
@@ -18,27 +20,34 @@ public class EnemyMover : MonoBehaviour
         dragon_fly_id = Animator.StringToHash("Fly");
         dragon.SetBool(dragon_fly_id, true);
 
-        FindPath();
         ReturnToStart();
-        StartCoroutine(TravelPath());
+        RecalculatePath(true);
     }
 
-    void Start() {
+    void Awake() {
         enemy = GetComponent<Enemy>();
         health = GetComponent<EnemyHealth>();
+        gridManager = FindObjectOfType<GridManager>();
+        pathFinder = FindObjectOfType<PathFinder>();
     }
 
     void ReturnToStart()
     {
-        transform.position = path[0].transform.position;
+        transform.position = gridManager.GetPositionFromCoordinates(pathFinder.StartCoordinates);
     }
 
     IEnumerator TravelPath()
     {
-        foreach(Waypoint waypoint in path)
+        if (path.Count <= 1)
+        {
+            gameObject.SetActive(false);
+        }
+
+        // ***starting from i = 1 because dragons are already at their start position*** 
+        for (int i = 1; i < path.Count; i++)
         {
             Vector3 startPosition = transform.position;
-            Vector3 endPosition = waypoint.transform.position;
+            Vector3 endPosition = gridManager.GetPositionFromCoordinates(path[i].coordinates);
             float travelPercent = 0f;
 
             transform.LookAt(endPosition); // always faces the endPosition
@@ -59,18 +68,24 @@ public class EnemyMover : MonoBehaviour
         FinishPath();
     }
 
-    void FindPath()
+    void RecalculatePath(bool resetPath)
     {
-        path.Clear();
-
-        GameObject pathObj = GameObject.FindGameObjectWithTag("Path");
-
-        foreach (Transform child in pathObj.transform)
+        Vector2Int currentCoordinates = new Vector2Int();
+        if (resetPath)
         {
-            Waypoint waypoint = child.GetComponent<Waypoint>();
-            if (waypoint != null)
-                path.Add(waypoint);
+            currentCoordinates = pathFinder.StartCoordinates;
         }
+        else
+        {
+            currentCoordinates = gridManager.GetCoordinatesFromPosition(transform.position);
+        }
+
+        StopAllCoroutines();
+        path.Clear();
+        path = pathFinder.GetNewPath(currentCoordinates);
+        
+        // ***so that the coroutine will STOP before getting a new path***
+        StartCoroutine(TravelPath()); 
     }
 
     public void SetPauseByDog()

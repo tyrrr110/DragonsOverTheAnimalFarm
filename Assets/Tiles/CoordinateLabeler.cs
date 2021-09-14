@@ -9,18 +9,22 @@ public class CoordinateLabeler : MonoBehaviour
 {
     [SerializeField] Color defaultColor = Color.white;
     [SerializeField] Color blockedColor = Color.grey;
+    [SerializeField] Color exploredColor = Color.yellow;
+    [SerializeField] Color pathColor = new Color(1f,0.5f,0f); // orange
     TextMeshPro label;
     Vector2Int coordinates = new Vector2Int();
-    Vector3 incrementalSnap;
-    Waypoint waypoint;
+    GridManager gridManager;
+    Dictionary<Vector2Int, Node> grid;
 
     void Awake()
     {
-        waypoint = GetComponentInParent<Waypoint>();
-
+        gridManager = FindObjectOfType<GridManager>();
+        if (gridManager != null)
+            grid = gridManager.Grid;
+        
         label = GetComponent<TextMeshPro>();
-        label.enabled = false;
-        incrementalSnap = UnityEditor.EditorSnapSettings.move; // things associated with UnityEditor CANNOT be built into final project!!!
+        label.enabled = true;
+        // incrementalSnap = UnityEditor.EditorSnapSettings.move; // things associated with UnityEditor CANNOT be built into final project!!!
 
         SetLabelColor();
         DisplayCoordinates();
@@ -34,14 +38,14 @@ public class CoordinateLabeler : MonoBehaviour
             UpdateObjectName();
         }
         SetLabelColor();
-        ToggleLabels(); // unavailable at Edit Mode???
+        ToggleLabels();
     }
 
     void DisplayCoordinates()
     {
-        // Debug.Log(incrementalSnap);
-        coordinates.x = Mathf.RoundToInt(transform.parent.position.x / incrementalSnap.x);
-        coordinates.y = Mathf.RoundToInt(transform.parent.position.z / incrementalSnap.z);
+        if (gridManager == null) return;
+        coordinates.x = Mathf.RoundToInt(transform.parent.position.x / gridManager.UnityGridSize);
+        coordinates.y = Mathf.RoundToInt(transform.parent.position.z / gridManager.UnityGridSize);
         label.text = $"{coordinates.x},{coordinates.y}";
     }
 
@@ -51,7 +55,20 @@ public class CoordinateLabeler : MonoBehaviour
 
     void SetLabelColor()
     {
-        if (waypoint.IsPlaceable)
+        if (grid == null) return;
+        if (!grid.ContainsKey(coordinates)) return;
+        Node node = grid[coordinates];
+        if (node == null) return;
+
+        if (node.isPath)
+        {
+            label.color = pathColor;
+        }
+        else if (node.isExplored)
+        {
+            label.color = exploredColor;
+        }
+        else if (node.isWalkable)
         {
             label.color = defaultColor;
         }

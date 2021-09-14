@@ -91,7 +91,7 @@ MonoBehaviour:
   maxHitPoints: 1500
   difficultyRamp: 500
   damagePerHitByChicken: 1
-  damagePerHitByCat: 100
+  damagePerHitByCat: 200
   damagePerHitByDog: 0
   waitByDog: 3
 --- !u!114 &2448136244059618680

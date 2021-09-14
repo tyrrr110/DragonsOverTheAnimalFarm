@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9157631239643505162}
-  - component: {fileID: 9157631239643505165}
+  - component: {fileID: 1414216479486046679}
   m_Layer: 0
   m_Name: WhichAnimalToPlace
   m_TagString: Untagged
@@ -31,7 +31,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &9157631239643505165
+--- !u!114 &1414216479486046679
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -52,3 +52,6 @@ MonoBehaviour:
   chicken: {fileID: 1923857084180158480, guid: aa3784adb6428184e991be2d60ee0cb2, type: 3}
   cat: {fileID: 5179710110819270356, guid: aa2d47f95b34fbe4d9cbe095f13585b5, type: 3}
   dog: {fileID: 17496051693841910, guid: 7451ef01e53127446b9d7406220542f6, type: 3}
+  placedPoints: []
+  buildAnimVFX: {fileID: 198044318287895918, guid: 8d0e75eb55320184daca212a9ad2bf1c, type: 3}
+  buildAnimWait: 1
